@@ -1,11 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+// import logo from './logo.svg';
 import './App.css';
 
-function App() {
+const App: React.FC = () => {
+  const [count, setCount] = useState(0);
+
   return (
     <div className="App">
-      <header className="App-header">
+      <p>You clicked {count} times.</p>
+      <button onClick={() => setCount(count + 1)}>
+        click me
+      </button>
+
+      <button onClick={() => setCount(0)}>
+        reset
+      </button>
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
@@ -18,9 +28,9 @@ function App() {
         >
           Learn React
         </a>
-      </header>
+      </header> */}
     </div>
   );
-}
+};
 
 export default App;
