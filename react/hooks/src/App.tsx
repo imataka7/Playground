@@ -18,6 +18,12 @@ const PrintName = () => {
   return <p>{name}</p>;
 };
 
+const PrintName2 = () => (
+  <NameContext.Consumer>
+    {name => <p>{name}</p>}
+  </NameContext.Consumer>
+);
+
 const App: React.FC = () => {
   const [count, setCount] = useState(0);
   // f = setCount;
@@ -58,11 +64,11 @@ const App: React.FC = () => {
         {/* <p>{cnt}</p> */}
         <button onClick={() => setCount(count + 1)}>
           click me
-      </button>
+        </button>
 
         <button onClick={() => setCount(0)}>
           reset
-      </button>
+        </button>
         {/* <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
@@ -79,6 +85,7 @@ const App: React.FC = () => {
         </header> */}
 
         <PrintName></PrintName>
+        <PrintName2></PrintName2>
       </div>
     </NameContext.Provider>
   );
