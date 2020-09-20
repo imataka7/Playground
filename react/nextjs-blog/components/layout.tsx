@@ -6,7 +6,7 @@ import utilStyles from "../styles/utils.module.css";
 const name = "Takaya Imagawa";
 export const siteTitle = "imataka7 Official Website";
 
-function Layout({ children, home }) {
+function Layout({ children, home }: { children: React.ReactNode; home?: boolean }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -35,23 +35,23 @@ function Layout({ children, home }) {
             <h1 className={utilStyles.heading2Xl}>{name}</h1>
           </>
         ) : (
-          <>
-            <Link href='/'>
-              <a>
-                <img
-                  src='/images/profile.jpg'
-                  className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}
-                  alt={name}
-                />
-              </a>
-            </Link>
-            <h2 className={utilStyles.headingLg}>
+            <>
               <Link href='/'>
-                <a className={utilStyles.colorInherit}>{name}</a>
+                <a>
+                  <img
+                    src='/images/profile.jpg'
+                    className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}
+                    alt={name}
+                  />
+                </a>
               </Link>
-            </h2>
-          </>
-        )}
+              <h2 className={utilStyles.headingLg}>
+                <Link href='/'>
+                  <a className={utilStyles.colorInherit}>{name}</a>
+                </Link>
+              </h2>
+            </>
+          )}
       </header>
       <main>{children}</main>
       {!home && (
