@@ -1,5 +1,5 @@
 import { AccountLayout, Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { Account, Connection, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY, Transaction, TransactionInstruction, Commitment } from "@solana/web3.js";
+import { Account, Connection, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY, Transaction, TransactionInstruction } from "@solana/web3.js";
 import BN from "bn.js";
 import { ESCROW_ACCOUNT_DATA_LAYOUT, EscrowLayout } from "./layout";
 
@@ -62,7 +62,8 @@ export const initEscrow = async (
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const encodedEscrowState = (await connection.getAccountInfo(escrowAccount.publicKey, 'finalized'))!.data;
+    const acc = await connection.getAccountInfo(escrowAccount.publicKey, 'finalized');
+    const encodedEscrowState = acc!.data;
     const decodedEscrowState = ESCROW_ACCOUNT_DATA_LAYOUT.decode(encodedEscrowState) as EscrowLayout;
     return {
         escrowAccountPubkey: escrowAccount.publicKey.toBase58(),
