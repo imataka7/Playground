@@ -1,9 +1,9 @@
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { Account, Connection, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
 import BN from "bn.js";
-import { ESCROW_ACCOUNT_DATA_LAYOUT, EscrowLayout } from "./layout"; 
+import { ESCROW_ACCOUNT_DATA_LAYOUT, EscrowLayout } from "./layout";
 
-const connection = new Connection("http://localhost:8899", 'singleGossip');
+const connection = new Connection("http://localhost:8899", 'finalized');
 
 export const takeTrade = async (
     privateKeyByteArray: string,
@@ -21,12 +21,12 @@ export const takeTrade = async (
 
     let encodedEscrowState;
     try {
-        encodedEscrowState = (await connection.getAccountInfo(escrowAccountPubkey, 'singleGossip'))!.data;
+        encodedEscrowState = (await connection.getAccountInfo(escrowAccountPubkey, 'finalized'))!.data;
     } catch (err) {
         throw new Error("Could not find escrow at given address!")
     }
     const decodedEscrowLayout = ESCROW_ACCOUNT_DATA_LAYOUT.decode(encodedEscrowState) as EscrowLayout;
-    const escrowState =  {
+    const escrowState = {
         escrowAccountPubkey: escrowAccountPubkey,
         isInitialized: !!decodedEscrowLayout.isInitialized,
         initializerAccountPubkey: new PublicKey(decodedEscrowLayout.initializerPubkey),
@@ -44,14 +44,14 @@ export const takeTrade = async (
             { pubkey: takerAccount.publicKey, isSigner: true, isWritable: false },
             { pubkey: takerYTokenAccountPubkey, isSigner: false, isWritable: true },
             { pubkey: takerXTokenAccountPubkey, isSigner: false, isWritable: true },
-            { pubkey: escrowState.XTokenTempAccountPubkey, isSigner: false, isWritable: true},
-            { pubkey: escrowState.initializerAccountPubkey, isSigner: false, isWritable: true},
-            { pubkey: escrowState.initializerYTokenAccount, isSigner: false, isWritable: true},
+            { pubkey: escrowState.XTokenTempAccountPubkey, isSigner: false, isWritable: true },
+            { pubkey: escrowState.initializerAccountPubkey, isSigner: false, isWritable: true },
+            { pubkey: escrowState.initializerYTokenAccount, isSigner: false, isWritable: true },
             { pubkey: escrowAccountPubkey, isSigner: false, isWritable: true },
-            { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false},
-            { pubkey: PDA[0], isSigner: false, isWritable: false}
-        ] 
-    })    
+            { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+            { pubkey: PDA[0], isSigner: false, isWritable: false }
+        ]
+    })
 
-    await connection.sendTransaction(new Transaction().add(exchangeInstruction), [takerAccount], {skipPreflight: false, preflightCommitment: 'singleGossip'});
+    await connection.sendTransaction(new Transaction().add(exchangeInstruction), [takerAccount], { skipPreflight: false, preflightCommitment: 'finalized' });
 }
