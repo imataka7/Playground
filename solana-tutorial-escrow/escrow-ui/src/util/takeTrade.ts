@@ -1,5 +1,5 @@
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { Account, Connection, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
+import { Account, Connection, PublicKey, Transaction, TransactionInstruction, Keypair } from "@solana/web3.js";
 import BN from "bn.js";
 import { ESCROW_ACCOUNT_DATA_LAYOUT, EscrowLayout } from "./layout";
 
@@ -14,6 +14,7 @@ export const takeTrade = async (
     programIdString: string,
 ) => {
     const takerAccount = new Account(privateKeyByteArray.split(',').map(s => parseInt(s)));
+    // const takerAccount = Keypair.fromSecretKey(new Uint8Array(privateKeyByteArray.split(',').map(s => parseInt(s))));
     const escrowAccountPubkey = new PublicKey(escrowAccountAddressString);
     const takerXTokenAccountPubkey = new PublicKey(takerXTokenAccountAddressString);
     const takerYTokenAccountPubkey = new PublicKey(takerYTokenAccountAddressString);
