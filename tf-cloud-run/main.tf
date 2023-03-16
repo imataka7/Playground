@@ -1,18 +1,29 @@
-resource "google_compute_instance" "vm_instance" {
-  name         = "my-instance"
-  machine_type = "e2-micro"
+resource "google_cloud_run_service" "default" {
+  name     = "hello-cloud-run"
+  location = var.region
 
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-10"
+  template {
+    spec {
+      containers {
+        image = "gcr.io/${var.project_id}/hello-cloud-run"
+      }
     }
   }
 
-  network_interface {
-    network = "default"
-
-    access_config {
-
-    }
+  traffic {
+    percent         = 100
+    latest_revision = true
   }
+}
+
+resource "google_cloud_run_service_iam_member" "public" {
+  project  = google_cloud_run_service.default.project
+  location = google_cloud_run_service.default.location
+  service  = google_cloud_run_service.default.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
+output "service_url" {
+  value = google_cloud_run_service.default.status[0].url
 }
