@@ -1,6 +1,6 @@
 resource "google_compute_instance" "vm_instance" {
   name         = "my-instance"
-  machine_type = "f1-micro"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
